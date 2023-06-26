@@ -13,5 +13,8 @@
     "@types/node": "^18",
     "nuxt": "^3.6.0",
     "typescript": "latest"
+  },
+  "dependencies": {
+    "js-cookie": "^3.0.5"
   }
 }
