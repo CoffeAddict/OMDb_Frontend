@@ -5,5 +5,12 @@ export default defineNuxtConfig({
     public: {
       API_BASE_URL: process.env.API_BASE_URL
     }
+  },
+  app: {
+    head: {
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
+      title: 'IMDb Search'
+    }
   }
 })
