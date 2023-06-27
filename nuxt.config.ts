@@ -11,7 +11,10 @@ export default defineNuxtConfig({
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
       title: 'IMDb Search',
-      link: [{ rel: 'icon', type: 'image/png', href: "/public/favicon.png" }]
+      link: [{ rel: 'icon', type: 'image/png', href: "/favicon.png" }]
     }
-  }
+  },
+  css: [
+    '@/assets/normalize.css'
+  ]
 })
