@@ -15,6 +15,16 @@ export default defineNuxtConfig({
     }
   },
   css: [
-    '@/assets/normalize.css'
-  ]
+    '@/assets/normalize.css',
+    '@/assets/global.css'
+  ],
+  modules: [
+    ['@nuxtjs/google-fonts', {
+      download: true,
+      families: {
+        'Work Sans': [300, 500, 800],
+        'Belanosima': [400]
+      }
+    }]
+  ],
 })
