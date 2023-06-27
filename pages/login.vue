@@ -31,21 +31,24 @@ export default {
         runtimeConfig: useRuntimeConfig(),
         username: '',
         password: '',
-        error: ''
+        error: null
     }
   },
   methods: {
     tryLogin () {
-        this.error = ''
+        // Reset variables and create string with parameters
+        this.error = null
         const params = new URLSearchParams({ user: this.username, password: this.password })
 
         fetch(`${this.runtimeConfig.public.API_BASE_URL}/login?${params}`, { method: 'POST' })
         .then(resp => {
+            // Handle response on error
             if (resp.ok) return resp.json()
             throw new Error(resp.status)
         })
         .then(data => this.saveToken(data.token))
         .catch(error => {
+            // Display error in case credentials are invalid
             if (error.message == 401) this.error = 'Invalid Credentials'
         })
     },

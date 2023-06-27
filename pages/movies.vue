@@ -20,14 +20,14 @@
             </div>
             <div v-if="totalItems > 10">
                 <button
-                    @click="page--; searchMovies(page)"
-                    :disabled="page == 1">
+                    @click="searchMovies(page--)"
+                    :disabled="page == 1 || loading">
                     &lt;
                 </button>
                 {{ page }} / {{ pagesAmount }}
                 <button
-                    @click="page++; searchMovies(page)"
-                    :disabled="page == pagesAmount">
+                    @click="searchMovies(page++)"
+                    :disabled="page == pagesAmount || loading">
                     >
                 </button>
             </div>
