@@ -1,17 +1,19 @@
 <template>
-    <div>
+    <div class="container">
         <header>
             <h1>IMDb Search</h1>
-            <input
-                type="text"
-                v-model="search"
-                @keydown.enter="searchMovies(); page = 1">
-            <button @click="searchMovies(); page = 1">Search</button>
+            <div>
+                <input
+                    type="text"
+                    v-model="search"
+                    @keydown.enter="searchMovies(); page = 1">
+                <button @click="searchMovies(); page = 1">Search</button>
+            </div>
         </header>
         <section class="movie-list">
             <div v-if="loading">Loading...</div>
-            <div v-else-if="movieList.length == 0">
-                {{ error ? error : 'type something on the search and press enter' }}
+            <div v-else-if="movieList.length == 0" class="message">
+                {{ error ? error : 'Type something on the search and press enter' }}
             </div>
             <div v-else>
                 <div v-for="(movie, i) in movieList" :key="i">
@@ -32,9 +34,6 @@
                 </button>
             </div>
         </section>
-        <footer>
-            Made with ❤️ using Nuxt
-        </footer>
     </div>
 </template>
 
@@ -102,3 +101,39 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+header {
+    display: flex;
+    align-items: center;
+}
+
+h1 {
+    margin-right: 1em;
+}
+
+input {
+    margin-right: 1em;
+}
+
+@media screen and (max-width: 600px) {
+    header {
+        flex-direction: column;
+        margin-bottom: 1em;
+    }
+
+    h1 {
+        margin-right: 0;
+        margin-bottom: 1em;
+    }
+
+    header div {
+        display: flex;
+        width: 100%;
+    }
+
+    input {
+        width: 100%;
+    }
+}
+</style>
