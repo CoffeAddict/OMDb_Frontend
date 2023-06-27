@@ -20,7 +20,6 @@ export default defineNuxtConfig({
   ],
   modules: [
     ['@nuxtjs/google-fonts', {
-      download: true,
       families: {
         'Work Sans': [300, 500, 800],
         'Belanosima': [400]
