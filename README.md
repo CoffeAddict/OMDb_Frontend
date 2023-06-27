@@ -1,63 +1,22 @@
-# Nuxt 3 Minimal Starter
+# **OMDb Frontend**
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+This Nuxt app was created to make request to https://www.omdbapi.com/ while using a serverless middleware
+
+Preview: https://omdb-frontend.vercel.app
+
+Requirements:
+
+- Node 16.x.x
 
 ## Setup
 
 Make sure to install the dependencies:
-
-```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
+```
+npm ci
 ```
 
-## Development Server
+Here's the list on environment variables that need to be available:
 
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
 ```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
+API_BASE_URL
 ```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
