@@ -10,23 +10,41 @@
                 <button @click="searchMovies(); page = 1">Search</button>
             </div>
         </header>
-        <section class="movie-list">
+        <section class="movie-list-container">
             <div v-if="loading">Loading...</div>
             <div v-else-if="movieList.length == 0" class="message">
-                {{ error ? error : 'Type something on the search and press enter' }}
+                {{ error ? error : 'Type something on the search bar and press enter' }}
             </div>
-            <div v-else>
-                <div v-for="(movie, i) in movieList" :key="i">
-                    {{  movie.Title }}
+            <div v-else class="movie-list">
+                <div
+                    class="movie-card"
+                    v-for="(movie, i) in movieList"
+                    :key="i">
+                    <div
+                        class="img-container"
+                        :style="{
+                            'background-image': `url(${getMoviePoster(movie)})`
+                        }"/>
+                    <div class="movie-details">
+                        <h2>
+                            {{ movie.Title }} <br>
+                            <span>{{ movie.Type }}</span>
+                            <span>{{ movie.Year }}</span>
+                        </h2>
+                    </div>
                 </div>
             </div>
-            <div v-if="totalItems > 10">
+            <div
+                class="pagination-controls"
+                v-if="totalItems > 10 && !error && !loading">
                 <button
                     @click="searchMovies(page--)"
                     :disabled="page == 1 || loading">
                     &lt;
                 </button>
-                {{ page }} / {{ pagesAmount }}
+                <span>
+                    {{ page }} / {{ pagesAmount }}
+                </span>
                 <button
                     @click="searchMovies(page++)"
                     :disabled="page == pagesAmount || loading">
@@ -39,6 +57,7 @@
 
 <script>
 import Cookies from 'js-cookie'
+import notFoundImage from '/not_found.png'
 export default {
     name: 'Index',
     mounted () {
@@ -67,13 +86,15 @@ export default {
             this.loading = true
             this.error = null
             this.movieList = []
+            this.totalItems = 0
             let page = newPage || 1
 
             // Create string with parameters
-            const params = new URLSearchParams({ s: this.search, token: this.token, page })
+            const params = new URLSearchParams({ s: this.search.trim(), token: this.token, page })
 
             fetch(`${this.runtimeConfig.public.API_BASE_URL}/movie?${params}`, { method: 'GET' })
             .then(resp => {
+                this.loading = false
                 // Handle response on error
                 if (resp.ok) return resp.json()
                 throw new Error(resp.status)
@@ -91,7 +112,9 @@ export default {
 
             this.totalItems = data.totalResults
             this.movieList = data.Search
-            this.loading = false
+        },
+        getMoviePoster (movie) {
+            return movie.Poster != 'N/A' ? movie.Poster : notFoundImage
         }
     },
     computed: {
@@ -106,6 +129,7 @@ export default {
 header {
     display: flex;
     align-items: center;
+    margin-bottom: 1em;
 }
 
 h1 {
@@ -116,10 +140,25 @@ input {
     margin-right: 1em;
 }
 
+.movie-list-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100% - 80px);
+    flex-direction: column;
+}
+
+.pagination-controls {
+    padding: 1em 0;
+}
+
+.pagination-controls span {
+    padding: 0 1em;
+}
+
 @media screen and (max-width: 600px) {
     header {
         flex-direction: column;
-        margin-bottom: 1em;
     }
 
     h1 {
@@ -134,6 +173,10 @@ input {
 
     input {
         width: 100%;
+    }
+
+    .movie-list-container {
+        height: calc(100% - 129px);
     }
 }
 </style>
