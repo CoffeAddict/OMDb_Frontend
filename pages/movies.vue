@@ -11,7 +11,7 @@
         <section class="movie-list">
             <div v-if="loading">Loading...</div>
             <div v-else-if="movieList.length == 0">
-                {{ error ? error : 'type something on the search bar to show results' }}
+                {{ error ? error : 'type something on the search and press enter' }}
             </div>
             <div v-else>
                 <div v-for="(movie, i) in movieList" :key="i">
