@@ -6,10 +6,42 @@
                 <input
                     type="text"
                     v-model="search"
-                    @keydown.enter="searchMovies(); page = 1">
-                <button @click="searchMovies(); page = 1">Search</button>
+                    @keydown.enter="searchMovies(); page = 1; showFilters = false">
+                <button @click="searchMovies(); page = 1; showFilters = false">Search</button>
+                <button
+                    class="alt"
+                    @click="showFilters = !showFilters">
+                    {{ showFilters ? 'Filters ▲': 'Filters ▼' }}
+                </button>
             </div>
         </header>
+        <div
+            class="filters"
+            :class="{'open': showFilters}">
+            <select
+                name="year"
+                id="year"
+                v-model="searchYear">
+                <option value="null" disabled selected>Year</option>
+                <option value="">All</option>
+                <option
+                    v-for="i in yearRangeArray"
+                    :key="i"
+                    :value="i">
+                    {{ i }}
+                </option>
+            </select>
+            <select
+                name="type"
+                id="type"
+                v-model="searchType">
+                <option value="null" disabled selected>Type</option>
+                <option value="">All</option>
+                <option value="movie">Movie</option>
+                <option value="series">Series</option>
+                <option value="epidose">Episode</option>
+            </select>
+        </div>
         <section class="movie-list-container">
             <div v-if="loading">Loading...</div>
             <div v-else-if="movieList.length == 0" class="message">
@@ -72,7 +104,10 @@ export default {
             totalItems: 0,
             loading: false,
             error: null,
-            page: 1
+            page: 1,
+            showFilters: false,
+            searchYear: null,
+            searchType: null
         }
     },
     methods: {
@@ -90,7 +125,15 @@ export default {
             let page = newPage || 1
 
             // Create string with parameters
-            const params = new URLSearchParams({ s: this.search.trim(), token: this.token, page })
+            console.log(this.searchType, this.searchYear)
+            const params = new URLSearchParams({
+                s: this.search.trim(),
+                token: this.token,
+                page,
+                type: this.searchType ? this.searchType : '',
+                y: this.searchYear ? this.searchYear : ''
+            })
+            console.log(params)
 
             fetch(`${this.runtimeConfig.public.API_BASE_URL}/movie?${params}`, { method: 'GET' })
             .then(resp => {
@@ -120,6 +163,9 @@ export default {
     computed: {
         pagesAmount () {
             return Math.round(this.totalItems / 10)
+        },
+        yearRangeArray () {
+            return [...Array(2023).keys()].filter(i => i > 1893).reverse()
         }
     }
 }
@@ -130,6 +176,9 @@ header {
     display: flex;
     align-items: center;
     margin-bottom: 1em;
+    background-color: var(--bg-color);
+    position: relative;
+    z-index: 3;
 }
 
 h1 {
@@ -137,7 +186,15 @@ h1 {
 }
 
 input {
-    margin-right: 1em;
+    margin-right: .5em;
+}
+
+header button:not(:last-child) {
+    margin-right: .5em;
+}
+
+.container {
+    position: relative;
 }
 
 .movie-list-container {
@@ -146,6 +203,28 @@ input {
     justify-content: center;
     height: calc(100% - 80px);
     flex-direction: column;
+    position: relative;
+    z-index: 1;
+}
+
+.filters {
+    background: #262626;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    position: absolute;
+    top: 0;
+    padding: 1em;
+    transition: top .2s ease;
+    width: 100%;
+    z-index: 2;
+}
+
+.filters.open {
+    top: 5em;
+}
+
+.movie-list {
+    z-index: -2;
 }
 
 .pagination-controls {
