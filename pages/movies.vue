@@ -2,7 +2,7 @@
     <div class="container">
         <header>
             <h1>IMDb Search</h1>
-            <div>
+            <div class="search-container">
                 <input
                     type="text"
                     v-model="search"
@@ -213,7 +213,7 @@ header button:not(:last-child) {
     border-bottom-right-radius: 8px;
     position: absolute;
     top: 0;
-    padding: 1em;
+    padding: .5em;
     transition: top .2s ease;
     width: 100%;
     z-index: 2;
@@ -238,6 +238,8 @@ header button:not(:last-child) {
 @media screen and (max-width: 600px) {
     header {
         flex-direction: column;
+        margin-bottom: 0;
+        padding-bottom: .5em;
     }
 
     h1 {
@@ -255,7 +257,30 @@ header button:not(:last-child) {
     }
 
     .movie-list-container {
-        height: calc(100% - 129px);
+        height: calc(100% - 183px);
+    }
+
+    .search-container {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .search-container input {
+        width: calc(75% - 0.5em);
+    }
+
+    .search-container button:first-of-type {
+        width: 25%;
+        margin-right: 0;
+    }
+
+    .search-container button:not(:first-of-type) {
+        width: 100%;
+        margin-top: .5em;
+    }
+
+    .filters.open {
+        top: 11.4em;
     }
 }
 </style>
