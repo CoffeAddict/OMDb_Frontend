@@ -44,7 +44,7 @@
         </div>
         <section class="movie-list-container">
             <div v-if="loading">Loading...</div>
-            <div v-else-if="movieList.length == 0" class="message">
+            <div v-else-if="movieList.length == 0" class="error-message">
                 {{ error ? error : 'Type something on the search bar and press enter' }}
             </div>
             <div v-else class="movie-list">
@@ -195,6 +195,11 @@ header button:not(:last-child) {
 
 .container {
     position: relative;
+}
+
+.error-message {
+    text-align: center;
+    max-width: 90%;
 }
 
 .movie-list-container {
