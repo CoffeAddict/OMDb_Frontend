@@ -158,7 +158,8 @@ button:focus-visible {
     font-size: 1em;
 }
 
-.movie-card h2 span {
+.movie-card h2 span,
+.modal h3 span {
     font-size: .6em;
     font-family: 'Work Sans', sans-serif;
     font-weight: normal;
@@ -168,13 +169,54 @@ button:focus-visible {
     margin-right: .5em;
 }
 
-.movie-card h2 span:nth-of-type(2) {
+.movie-card h2 span:nth-of-type(2),
+.modal h3 span:nth-of-type(2) {
     background: #ff0000;
 }
 
 .movie-card .img-container {
     padding-bottom: 100%;
     background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: #0000006e;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal .close-modal {
+    position: absolute;
+    top: .5em;
+    right: .5em;
+}
+
+.modal .close-modal:hover {
+    cursor: pointer;
+}
+
+.modal-content {
+    background-color: var(--bg-color);
+    border: 2px solid var(--card-border);
+    border-radius: 8px;
+    padding: 1em;
+    width: 500px;
+    max-height: 100%;
+}
+
+.modal .img-container {
+    padding-bottom: 45%;
+    background-size: contain;
+    margin: 0 auto;
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -188,5 +230,9 @@ button:focus-visible {
 @media screen and (max-width: 600px) {
     .movie-card {
         width: calc(50% - 1em);
+    }
+
+    .modal .img-container {
+        padding-bottom: 60%;
     }
 }

@@ -6,8 +6,8 @@
                 <input
                     type="text"
                     v-model="search"
-                    @keydown.enter="searchMovies(); page = 1; showFilters = false">
-                <button @click="searchMovies(); page = 1; showFilters = false">Search</button>
+                    @keydown.enter="searchTriggerEvent()">
+                <button @click="searchTriggerEvent()">Search</button>
                 <button
                     class="alt"
                     @click="showFilters = !showFilters">
@@ -51,7 +51,8 @@
                 <div
                     class="movie-card"
                     v-for="(movie, i) in movieList"
-                    :key="i">
+                    :key="i"
+                    @click="loadMovieDetails(movie.imdbID)">
                     <div
                         class="img-container"
                         :style="{
@@ -84,6 +85,39 @@
                 </button>
             </div>
         </section>
+        <section
+            class="modal"
+            v-if="showModal && modalMovie">
+            <div class="modal-content">
+                <div
+                    class="img-container"
+                    :style="{
+                        'background-image': `url(${getMoviePoster(modalMovie)})`
+                    }"/>
+                <h3>
+                    {{  modalMovie.Title }} <br>
+                    <span>{{ modalMovie.Type }}</span>
+                    <span>{{ modalMovie.Year }}</span>
+                </h3>
+                <p>
+                    <span v-if="modalMovie.Plot != 'N/A'">{{ modalMovie.Plot }}</span> <br> <br>
+                    <span v-if="modalMovie.Ratings.length > 0">Rating: {{ modalMovie.Ratings[0].value || 'N/A' }}</span> <br>
+                    <span>Rated: {{ modalMovie.Rated }} </span> <br>
+                    <span>Genre: {{ modalMovie.Genre }} </span> <br>
+                    <span>Director: {{ modalMovie.Director }} </span> <br>
+                </p>
+            </div>
+            <div v-if="!modalMovie">
+                Loading...
+            </div>
+            <div
+                tabindex="0"
+                class="close-modal"
+                @keydown.enter="showModal = false"
+                @click="showModal = false">
+                ❌
+            </div>
+        </section>
     </div>
 </template>
 
@@ -107,7 +141,9 @@ export default {
             page: 1,
             showFilters: false,
             searchYear: null,
-            searchType: null
+            searchType: null,
+            showModal: true,
+            modalMovie: null
         }
     },
     methods: {
@@ -115,6 +151,11 @@ export default {
             // Verify the existence of a token
             this.token = Cookies.get('token')
             if (!this.token) this.$router.push('/login')
+        },
+        searchTriggerEvent () {
+            this.page = 1
+            this.showFilters = false
+            this.searchMovies()
         },
         searchMovies (newPage) {
             // Reset variables
@@ -125,7 +166,6 @@ export default {
             let page = newPage || 1
 
             // Create string with parameters
-            console.log(this.searchType, this.searchYear)
             const params = new URLSearchParams({
                 s: this.search.trim(),
                 token: this.token,
@@ -133,7 +173,6 @@ export default {
                 type: this.searchType ? this.searchType : '',
                 y: this.searchYear ? this.searchYear : ''
             })
-            console.log(params)
 
             fetch(`${this.runtimeConfig.public.API_BASE_URL}/movie?${params}`, { method: 'GET' })
             .then(resp => {
@@ -148,6 +187,28 @@ export default {
                 if (error.message == 401 || error.message == 403) this.$router.push('/login')
             })
         },
+        searchMovieById (id) {
+            const params = new URLSearchParams({
+                i: id,
+            })
+
+            fetch(`${this.runtimeConfig.public.API_BASE_URL}/movie?${params}`, { method: 'GET' })
+            .then(resp => {
+                // Handle response on error
+                if (resp.ok) return resp.json()
+                throw new Error(resp.status)
+            })
+            .then(data => this.modalMovie = data)
+            .catch(error => {
+                // Redirect to login if token's expired or not valid
+                if (error.message == 401 || error.message == 403) this.$router.push('/login')
+            })
+        },
+        loadMovieDetails (id) {
+            this.modalMovie = null
+            this.showModal = true
+            this.searchMovieById(id)
+        },
         handleSearchResults (data) {
             // Handle missing data and response error report
             if (!data) {console.error('Missing request data'); return}
@@ -157,7 +218,7 @@ export default {
             this.movieList = data.Search
         },
         getMoviePoster (movie) {
-            return movie.Poster != 'N/A' ? movie.Poster : notFoundImage
+            return movie && movie.Poster != 'N/A' ? movie.Poster : notFoundImage
         }
     },
     computed: {
@@ -165,7 +226,8 @@ export default {
             return Math.round(this.totalItems / 10)
         },
         yearRangeArray () {
-            return [...Array(2023).keys()].filter(i => i > 1893).reverse()
+            const yearLimit = new Date().getFullYear() + 1
+            return [...Array(yearLimit).keys()].filter(i => i > 1893).reverse()
         }
     }
 }
