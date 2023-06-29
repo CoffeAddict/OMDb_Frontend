@@ -190,6 +190,7 @@ export default {
         searchMovieById (id) {
             const params = new URLSearchParams({
                 i: id,
+                token: this.token
             })
 
             fetch(`${this.runtimeConfig.public.API_BASE_URL}/movie?${params}`, { method: 'GET' })
