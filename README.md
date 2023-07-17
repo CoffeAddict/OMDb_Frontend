@@ -2,8 +2,8 @@
 
 This Nuxt app was created to make request to https://www.omdbapi.com/ while using a serverless middleware
 
-Preview: https://omdb-frontend.vercel.app
-User: admin
+Preview: https://omdb-frontend.vercel.app\
+User: admin\
 Password: admin
 
 Requirements:
